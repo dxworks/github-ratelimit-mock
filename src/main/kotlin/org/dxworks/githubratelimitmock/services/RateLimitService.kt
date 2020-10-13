@@ -3,6 +3,7 @@ package org.dxworks.githubratelimitmock.services
 import org.dxworks.githubratelimitmock.config.UserTokens
 import org.springframework.stereotype.Service
 import java.time.ZoneId
+import java.time.ZoneOffset.UTC
 import java.time.ZonedDateTime
 
 @Service
@@ -34,5 +35,5 @@ class RateLimitService {
         user.tokens.forEach { tokenToUser[it] = user.name }
     }
 
-    private val epochSecond get() = ZonedDateTime.now(ZoneId.systemDefault()).toEpochSecond()
+    private val epochSecond get() = ZonedDateTime.now(UTC).toEpochSecond()
 }
