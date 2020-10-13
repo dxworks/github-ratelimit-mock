@@ -1,0 +1,17 @@
+server:
+  port: 4004
+
+
+users:
+  - name: john
+    tokens:
+      - aaa
+      - bbb
+      - ccc
+  - name: jane
+    tokens:
+      - abc
+      - bcd
+  - name: joe
+    tokens:
+      - asd
