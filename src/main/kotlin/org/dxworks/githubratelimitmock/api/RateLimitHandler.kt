@@ -24,17 +24,20 @@ class RateLimitHandler(
         val user = authorizationService.getToken(request.getHeader("authentication"))
         val rateLimit = rateLimitService.getRateLimit(user)
 
-        addRateLimitHeaders(rateLimit, response)
-        if (request.requestURI.toString() != "/rate_limit") {
-            rateLimitService.decRateLimit(user)
+        if (request.requestURI.toString() == "/rate_limit") {
+            addRateLimitHeaders(rateLimit, response)
             return true
         }
 
-        return if (rateLimit.remaining == 0L) {
+        if (rateLimit.remaining == 0L) {
             response.status = HttpStatus.FORBIDDEN.value()
             response.writer.print(rateLimitExceeded)
-            false
-        } else true
+        } else {
+            response.writer.print("{}")
+            rateLimitService.decRateLimit(user)
+        }
+        addRateLimitHeaders(rateLimit, response)
+        return false
     }
 
     private fun addRateLimitHeaders(rateLimit: RateLimit, response: HttpServletResponse) {
