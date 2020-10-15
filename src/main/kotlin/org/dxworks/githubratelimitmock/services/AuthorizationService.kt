@@ -13,7 +13,7 @@ class AuthorizationService {
         return when {
             auth == null -> ""
             auth.startsWith(basic) -> getBasicToken(auth.removePrefix(basic))
-            auth.startsWith(bearer) -> auth.removePrefix(basic)
+            auth.startsWith(bearer) -> auth.removePrefix(bearer)
             else -> ""
         }
     }

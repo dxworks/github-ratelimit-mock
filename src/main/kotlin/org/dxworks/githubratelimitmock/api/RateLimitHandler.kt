@@ -6,6 +6,9 @@ import org.dxworks.githubratelimitmock.services.RateLimitService
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -21,8 +24,10 @@ class RateLimitHandler(
 }"""
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        val user = authorizationService.getToken(request.getHeader("authentication"))
+        val user = authorizationService.getToken(request.getHeader("Authorization"))
         val rateLimit = rateLimitService.getRateLimit(user)
+
+        println("[${request.requestURI}] $user -> ${rateLimit.remaining} ${LocalDateTime.ofEpochSecond(rateLimit.reset, 0, ZoneOffset.UTC)}\n")
 
         if (request.requestURI.toString() == "/rate_limit") {
             addRateLimitHeaders(rateLimit, response)
